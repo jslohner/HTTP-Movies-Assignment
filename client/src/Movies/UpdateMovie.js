@@ -44,7 +44,7 @@ function UpdateMovie(props) {
     axios
       .put(`http://localhost:5000/api/movies/${params.id}`, movie)
       .then(res => {
-        history.push('/');
+        history.push("/");
         console.log(res);
       })
       .catch(err => {
