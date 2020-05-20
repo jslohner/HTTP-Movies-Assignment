@@ -11,7 +11,6 @@ const initMovie = {
 
 function UpdateMovie(props) {
   const [movie, setMovie] = useState(initMovie);
-  // const [updateFormValues, setUpdateFormValues] = useState(initMovie);
   const params = useParams();
   const history = useHistory();
 
@@ -20,7 +19,6 @@ function UpdateMovie(props) {
       .get(`http://localhost:5000/api/movies/${params.id}`)
       .then(res => {
         setMovie(res.data);
-        // setUpdateFormValues(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -41,11 +39,24 @@ function UpdateMovie(props) {
     });
   };
 
+  const submitEdit = e => {
+    e.preventDefault();
+    axios
+      .put(`http://localhost:5000/api/movies/${params.id}`, movie)
+      .then(res => {
+        history.push('/');
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="update-movie-page">
       <h2>Update Movie</h2>
       {!movie && <h3>Loading Movie Data...</h3>}
-      <form className="update-movie-form">
+      <form onSubmit={submitEdit} className="update-movie-form">
         <input value={movie.title} onChange={changeHandler} type="text" name="title" placeholder="Title"/>
         <input value={movie.director} onChange={changeHandler} type="text" name="director" placeholder="Director"/>
         <input value={movie.metascore} onChange={changeHandler} type="number" name="metascore" placeholder="Metascore"/>
@@ -53,18 +64,10 @@ function UpdateMovie(props) {
         {movie.stars.length > 0 && movie.stars.map((star, idx) => {
           return <input key={idx} value={star} onChange={starChangeHandler} type="text" name={star} placeholder={`Star ${idx + 1}`}/>
         })}
+        <button onClick={submitEdit}>Submit</button>
       </form>
     </div>
   );
 }
 
 export default UpdateMovie;
-
-// /api/movies/id
-// title, director, metascore, stars
-// id - num
-
-// title - string
-// director - string
-// metascore - num
-// stars - array
