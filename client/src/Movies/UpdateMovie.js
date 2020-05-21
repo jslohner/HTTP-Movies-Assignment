@@ -9,7 +9,7 @@ const initMovie = {
   stars: []
 };
 
-function UpdateMovie(props) {
+function UpdateMovie({ movies, setMovies }) {
   const [movie, setMovie] = useState(initMovie);
   const params = useParams();
   const history = useHistory();
@@ -44,8 +44,14 @@ function UpdateMovie(props) {
     axios
       .put(`http://localhost:5000/api/movies/${params.id}`, movie)
       .then(res => {
+        setMovies(movies.map(movieData => {
+          if (movieData.id === res.data.id) {
+            movieData = res.data;
+            return movieData
+          }
+          return movieData;
+        }));
         history.push("/");
-        console.log(res);
       })
       .catch(err => {
         console.log(err);
